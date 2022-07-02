@@ -184,13 +184,13 @@ func (p PostModel) Delete(ctx context.Context, id int64) error {
 }
 
 func (p PostModel) GetAll(ctx context.Context, filters entitys.Filters) ([]*entitys.Post, entitys.Metadata, error) {
-	promoted, err := p.getAllPromoted(ctx)
+	promoted, err := p.getAllPromoted(ctx, filters)
 	if err != nil {
 		return nil, entitys.Metadata{}, err
 	}
 
 	query := fmt.Sprintf(`
-        SELECT count(*) OVER(), posts.id, posts.created_at, posts.title, posts.author, posts.link, posts.subreddit_id, posts.content,
+        SELECT posts.id, posts.created_at, posts.title, posts.author, posts.link, posts.subreddit_id, posts.content,
 		       posts.score, posts.promoted, posts.nsfw, posts.version, 
 		       sub_post.id, sub_post.created_at, sub_post.title, sub_post.author, sub_post.link,
 		       sub_post.content, sub_post.score, sub_post.promoted, sub_post.nsfw, sub_post.version
@@ -212,15 +212,13 @@ func (p PostModel) GetAll(ctx context.Context, filters entitys.Filters) ([]*enti
 
 	defer rows.Close()
 
-	totalRecords := 0
 	posts := make([]*entitys.Post, 0, filters.Limit())
 
-	for i := 0; rows.Next(); i++ {
+	for rows.Next() {
 		var post entitys.Post
 		var subPost entitys.SubPost
 
 		err := rows.Scan(
-			&totalRecords,
 			&post.ID,
 			&post.CreatedAt,
 			&post.Title,
@@ -252,18 +250,6 @@ func (p PostModel) GetAll(ctx context.Context, filters entitys.Filters) ([]*enti
 			post.Subreddit = &subPost
 		}
 
-		if i == 2 {
-			if !post.NSFW && !posts[0].NSFW {
-				posts = append(posts[:1], promoted[0], posts[1])
-			}
-		}
-
-		if i == 16 {
-			if !post.NSFW && !posts[14].NSFW {
-				posts = append(posts[:15], promoted[1])
-			}
-		}
-
 		posts = append(posts, &post)
 	}
 
@@ -271,29 +257,50 @@ func (p PostModel) GetAll(ctx context.Context, filters entitys.Filters) ([]*enti
 		return nil, entitys.Metadata{}, err
 	}
 
-	metadata := entitys.CalculateMetadata(totalRecords, filters.Page, filters.PageSize)
+	if len(posts) >= 3 && len(promoted) >= 1 {
+
+		if !posts[0].NSFW && !posts[1].NSFW {
+			pr := []*entitys.Post{promoted[0]}
+
+			posts = append(posts[:1], append(pr, posts[1:]...)...)
+		}
+	}
+
+	if len(posts) > 16 && len(promoted) >= 2 {
+
+		if !posts[14].NSFW && !posts[15].NSFW {
+			pr := []*entitys.Post{promoted[1]}
+
+			posts = append(posts[:15], append(pr, posts[15:]...)...)
+		}
+	}
+
+	metadata := entitys.CalculateMetadata(len(posts), filters.Page, filters.PageSize)
 
 	return posts, metadata, nil
 }
 
-func (p PostModel) getAllPromoted(ctx context.Context) ([]*entitys.Post, error) {
+func (p PostModel) getAllPromoted(ctx context.Context, filters entitys.Filters) ([]*entitys.Post, error) {
 	query := `
         SELECT id, created_at, title, author, link, content, score, promoted, nsfw
 		FROM posts
 		WHERE promoted = true
-        ORDER BY created_at DESC, id DESC`
+        ORDER BY created_at DESC, id DESC
+        LIMIT $1 OFFSET $2`
 
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	rows, err := p.DB.QueryContext(ctx, query)
+	args := []interface{}{filters.PromotedPerPage(), filters.PromotedOffset()}
+
+	rows, err := p.DB.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}
 
 	defer rows.Close()
 
-	posts := make([]*entitys.Post, 0, 10)
+	posts := make([]*entitys.Post, 0, filters.PromotedPerPage())
 
 	for rows.Next() {
 		var post entitys.Post

@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const promotedCount = 2
+
 type Filters struct {
 	Page         int
 	PageSize     int
@@ -45,6 +47,14 @@ func (f *Filters) Validate(v *validator.Validator) {
 	v.Check(f.PageSize > 0, "page_size", "must be greater than zero")
 	v.Check(f.PageSize <= 100, "page_size", "must be a maximum of 100")
 	v.Check(validator.In(f.Sort, f.SortSafelist...), "sort", "invalid sort value")
+}
+
+func (f Filters) PromotedPerPage() int {
+	return promotedCount
+}
+
+func (f Filters) PromotedOffset() int {
+	return (f.Page - 1) * promotedCount
 }
 
 type Metadata struct {
