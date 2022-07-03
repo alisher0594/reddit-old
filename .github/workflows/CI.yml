@@ -55,6 +55,13 @@ jobs:
             -covermode atomic \
             -coverprofile=coverage.txt \
             ./internal/..."
+      - name: End To End Tests
+        run: "go test \
+            -v \
+            -race \
+            -covermode atomic \
+            -coverprofile=coverage.txt \
+            ./cmd/api/..."
       - name: Upload coverage report
         run: bash <(curl -s https://codecov.io/bash)
 

@@ -39,6 +39,11 @@ func (p PostModel) Delete(ctx context.Context, id int64) error {
 }
 
 func (p PostModel) GetAll(ctx context.Context, filters entitys.Filters) ([]*entitys.Post, entitys.Metadata, error) {
+	_, err := p.getAllPromoted(ctx, filters)
+	if err != nil {
+		return nil, entitys.Metadata{}, err
+	}
+
 	return nil, entitys.Metadata{}, nil
 }
 
