@@ -9,11 +9,33 @@ import (
 	"testing"
 )
 
-func TestHealthcheckHandler(t *testing.T) {
+func TestHandlers(t *testing.T) {
 	app := newTestApplication()
 	ts := newTestServer(app.routes())
 	defer ts.Close()
 
+	testCases := []struct {
+		name     string
+		testFunc func(t *testing.T, ts *testServer)
+	}{
+		{
+			name:     "HealthcheckHandler",
+			testFunc: HealthcheckHandler,
+		},
+		{
+			name:     "CreatePostHandler",
+			testFunc: CreatePostHandler,
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.testFunc(t, ts)
+		})
+	}
+}
+
+func HealthcheckHandler(t *testing.T, ts *testServer) {
 	code, _, body := ts.get(t, "/v1/healthcheck")
 
 	if code != http.StatusOK {
@@ -32,11 +54,7 @@ func TestHealthcheckHandler(t *testing.T) {
 	}
 }
 
-func TestCreatePostHandler(t *testing.T) {
-	app := newTestApplication()
-	ts := newTestServer(app.routes())
-	defer ts.Close()
-
+func CreatePostHandler(t *testing.T, ts *testServer) {
 	code, _, body := ts.get(t, "/v1/posts/13")
 
 	if code != http.StatusOK {
