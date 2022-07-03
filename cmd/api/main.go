@@ -85,8 +85,6 @@ func main() {
 }
 
 func openDB(cfg config) (*sql.DB, error) {
-	//psqlconn := "host=localhost port=5432 user=user password=pass dbname=postgres sslmode=disable"
-
 	db, err := sql.Open("postgres", cfg.db.dsn)
 	if err != nil {
 		return nil, err
