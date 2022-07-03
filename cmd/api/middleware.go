@@ -27,7 +27,6 @@ func (app *application) enableCORS(next http.Handler) http.Handler {
 		w.Header().Add("Vary", "Access-Control-Request-Method")
 
 		origin := r.Header.Get("Origin")
-
 		if origin != "" {
 			for i := range app.config.cors.trustedOrigins {
 				if origin == app.config.cors.trustedOrigins[i] {

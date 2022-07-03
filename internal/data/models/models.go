@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/alisher0594/reddit-old/internal/data/entitys"
+	"github.com/alisher0594/reddit-old/internal/data/models/mock"
 	"github.com/alisher0594/reddit-old/internal/data/models/postges"
 )
 
@@ -26,8 +27,8 @@ func New(db *sql.DB) Models {
 	}
 }
 
-//func NewMock() Models {
-//	return Models{
-//		Posts: mock.PostModel{},
-//	}
-//}
+func NewMock() Models {
+	return Models{
+		Posts: mock.PostModel{},
+	}
+}

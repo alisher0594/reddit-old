@@ -1,24 +1,47 @@
 package mock
 
 import (
+	"context"
 	"github.com/alisher0594/reddit-old/internal/data/entitys"
 )
 
 // PostModel ...
 type PostModel struct{}
 
-func (m PostModel) Insert(movie *entitys.Post) error {
+func (p PostModel) Insert(ctx context.Context, post *entitys.Post) error {
 	return nil
 }
 
-func (m PostModel) Get(id int64) (*entitys.Post, error) {
+func (p PostModel) Get(ctx context.Context, id int64) (*entitys.Post, error) {
+	return &entitys.Post{
+		ID:       13,
+		Title:    "Mocked post",
+		Author:   "t2_fed2ere13",
+		Link:     "https://old.reddit.com/user/fed2ere13",
+		Content:  "content of mocked post",
+		Score:    100500,
+		Promoted: false,
+		NSFW:     false,
+		Version:  1,
+	}, nil
+}
+
+func (p PostModel) Update(ctx context.Context, post *entitys.Post) error {
+	return nil
+}
+
+func (p PostModel) Vote(ctx context.Context, id int64, vote int64) (int64, error) {
+	return 0, nil
+}
+
+func (p PostModel) Delete(ctx context.Context, id int64) error {
+	return nil
+}
+
+func (p PostModel) GetAll(ctx context.Context, filters entitys.Filters) ([]*entitys.Post, entitys.Metadata, error) {
+	return nil, entitys.Metadata{}, nil
+}
+
+func (p PostModel) getAllPromoted(ctx context.Context, filters entitys.Filters) ([]*entitys.Post, error) {
 	return nil, nil
-}
-
-func (m PostModel) Update(movie *entitys.Post) error {
-	return nil
-}
-
-func (m PostModel) Delete(id int64) error {
-	return nil
 }
