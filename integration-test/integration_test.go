@@ -64,7 +64,7 @@ func TestHTTPCreatePost(t *testing.T) {
 		Send().Body().String(body),
 
 		Expect().Status().Equal(http.StatusCreated),
-		Expect().Headers("Location").Contains("/v1/post/1"),
+		Expect().Headers("Location").Contains("/v1/post/49"),
 		Expect().Body().JSON().JQ(".envelope.post.author").Equal("t2_ad4few0q"),
 		Expect().Body().JSON().JQ(".envelope.post.link").Equal("https://google.com"),
 		Expect().Body().JSON().JQ(".envelope.post.title").Equal("Test HTTP Create Post"),
