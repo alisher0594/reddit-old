@@ -59,8 +59,7 @@ jobs:
         run: "go test \
             -v \
             -race \
-            -covermode atomic \
-            -coverprofile=coverage.txt \
+            -vet=off \
             ./cmd/api/..."
       - name: Upload coverage report
         run: bash <(curl -s https://codecov.io/bash)
