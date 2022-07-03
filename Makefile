@@ -29,7 +29,7 @@ test: ### run unit tests
 
 run: ### run app
 	go mod tidy && go mod download && \
-	CGO_ENABLED=0 go run -tags migrate ./cmd/api
+	go run -tags migrate ./cmd/api -db-dsn='postgres://user:pass@localhost:5432/postgres?sslmode=disable'
 .PHONY: run
 
 migrate-create:  ### create new migration
