@@ -62,7 +62,9 @@ func TestHTTPCreatePost(t *testing.T) {
 		Post(basePath+"/posts"),
 		Send().Headers("Content-Type").Add("application/json"),
 		Send().Body().String(body),
-		Expect().Status().Equal(http.StatusOK),
+
+		Expect().Status().Equal(http.StatusCreated),
+		Expect().Headers("Location").Contains("/v1/post/1"),
 		Expect().Body().JSON().JQ(".envelope.post.author").Equal("t2_ad4few0q"),
 		Expect().Body().JSON().JQ(".envelope.post.link").Equal("https://google.com"),
 		Expect().Body().JSON().JQ(".envelope.post.title").Equal("Test HTTP Create Post"),
@@ -81,11 +83,12 @@ func TestHTTPCreatePost(t *testing.T) {
 	}`
 
 	Test(t,
-		Description("DoTranslate Fail"),
-		Post(basePath+"/translation/do-translate"),
+		Description("CreatePost Fail"),
+		Post(basePath+"/posts"),
 		Send().Headers("Content-Type").Add("application/json"),
 		Send().Body().String(body),
-		Expect().Status().Equal(http.StatusBadRequest),
-		Expect().Body().JSON().JQ(".error").Equal("invalid request body"),
+
+		Expect().Status().Equal(http.StatusUnprocessableEntity),
+		Expect().Body().JSON().JQ(".error.author").Equal("must have prefix: t2_"),
 	)
 }
