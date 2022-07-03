@@ -65,12 +65,12 @@ func TestHTTPCreatePost(t *testing.T) {
 
 		Expect().Status().Equal(http.StatusCreated),
 		Expect().Headers("Location").Contains("/v1/post/49"),
-		Expect().Body().JSON().JQ(".envelope.post.author").Equal("t2_ad4few0q"),
-		Expect().Body().JSON().JQ(".envelope.post.link").Equal("https://google.com"),
-		Expect().Body().JSON().JQ(".envelope.post.title").Equal("Test HTTP Create Post"),
-		Expect().Body().JSON().JQ(".envelope.post.content").Equal("Some content"),
-		Expect().Body().JSON().JQ(".envelope.post.promoted").Equal(false),
-		Expect().Body().JSON().JQ(".envelope.post.nsfw").Equal(true),
+		Expect().Body().JSON().JQ(".post.author").Equal("t2_ad4few0q"),
+		Expect().Body().JSON().JQ(".post.link").Equal("https://google.com"),
+		Expect().Body().JSON().JQ(".post.title").Equal("Test HTTP Create Post"),
+		Expect().Body().JSON().JQ(".post.content").Equal("Some content"),
+		Expect().Body().JSON().JQ(".post.promoted").Equal(false),
+		Expect().Body().JSON().JQ(".post.nsfw").Equal(true),
 	)
 
 	body = `{
