@@ -36,7 +36,7 @@ func TestHandlers(t *testing.T) {
 }
 
 func HealthcheckHandler(t *testing.T, ts *testServer) {
-	code, _, body := ts.get(t, "/v1/healthcheck")
+	code, _, body := ts.get(t, "/healthcheck")
 
 	if code != http.StatusOK {
 		t.Errorf("want %d; got %d", http.StatusOK, code)
