@@ -8,6 +8,7 @@ import (
 
 const promotedCount = 2
 
+// Filters ...
 type Filters struct {
 	Page         int
 	PageSize     int
@@ -15,6 +16,7 @@ type Filters struct {
 	SortSafelist []string
 }
 
+// SortColumn ...
 func (f Filters) SortColumn() string {
 	for _, safeValue := range f.SortSafelist {
 		if f.Sort == safeValue {
@@ -25,6 +27,7 @@ func (f Filters) SortColumn() string {
 	panic("unsafe sort parameter: " + f.Sort)
 }
 
+// SortDirection ...
 func (f Filters) SortDirection() string {
 	if strings.HasPrefix(f.Sort, "-") {
 		return "DESC"
@@ -33,14 +36,17 @@ func (f Filters) SortDirection() string {
 	return "ASC"
 }
 
+// Limit ...
 func (f Filters) Limit() int {
 	return f.PageSize
 }
 
+// Offset ...
 func (f Filters) Offset() int {
 	return (f.Page - 1) * f.PageSize
 }
 
+// Validate ...
 func (f *Filters) Validate(v *validator.Validator) {
 	v.Check(f.Page > 0, "page", "must be greater than zero")
 	v.Check(f.Page <= 10_000_000, "page", "must be a maximum of 10 million")
@@ -49,14 +55,17 @@ func (f *Filters) Validate(v *validator.Validator) {
 	v.Check(validator.In(f.Sort, f.SortSafelist...), "sort", "invalid sort value")
 }
 
+// PromotedPerPage ...
 func (f Filters) PromotedPerPage() int {
 	return promotedCount
 }
 
+// PromotedOffset ...
 func (f Filters) PromotedOffset() int {
 	return (f.Page - 1) * promotedCount
 }
 
+// Metadata ...
 type Metadata struct {
 	CurrentPage  int `json:"current_page,omitempty"`
 	PageSize     int `json:"page_size,omitempty"`

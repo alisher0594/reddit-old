@@ -3,6 +3,8 @@ package entitys
 import "errors"
 
 var (
+	// ErrRecordNotFound ...
 	ErrRecordNotFound = errors.New("record not found")
-	ErrEditConflict   = errors.New("edit conflict")
+	// ErrEditConflict ...
+	ErrEditConflict = errors.New("edit conflict")
 )
