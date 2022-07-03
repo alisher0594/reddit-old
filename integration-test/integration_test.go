@@ -55,7 +55,7 @@ func TestHTTPCreatePost(t *testing.T) {
 		"title": "Test HTTP Create Post",
 		"content": "Some content",
 		"promoted": false,
-		"nsfw": false
+		"nsfw": true
 	}`
 	Test(t,
 		Description("CreatePost Success"),
