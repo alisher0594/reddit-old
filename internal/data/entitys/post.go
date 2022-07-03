@@ -9,6 +9,7 @@ import (
 
 const prefix = "t2_"
 
+// Post ...
 type Post struct {
 	ID          int64     `json:"id"`
 	CreatedAt   time.Time `json:"-"`
@@ -24,6 +25,7 @@ type Post struct {
 	Version     int32     `json:"version"`
 }
 
+// Validate ...
 func (p *Post) Validate(v *validator.Validator) {
 	v.Check(p.Title != "", "title", "must be provided")
 	v.Check(len(p.Title) <= 500, "title", "must not be more than 500 bytes long")
@@ -42,6 +44,7 @@ func validateAuthor(v *validator.Validator, author string) {
 	v.Check(validator.IsLowercase(author), "author", "should only contain lowercase letters and numbers")
 }
 
+// SubPost ...
 type SubPost struct {
 	ID        *int64     `json:"id"`
 	CreatedAt *time.Time `json:"-"`

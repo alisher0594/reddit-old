@@ -8,10 +8,12 @@ import (
 // PostModel ...
 type PostModel struct{}
 
+// Insert ...
 func (p PostModel) Insert(ctx context.Context, post *entitys.Post) error {
 	return nil
 }
 
+// Get ...
 func (p PostModel) Get(ctx context.Context, id int64) (*entitys.Post, error) {
 	return &entitys.Post{
 		ID:       13,
@@ -26,18 +28,22 @@ func (p PostModel) Get(ctx context.Context, id int64) (*entitys.Post, error) {
 	}, nil
 }
 
+// Update ...
 func (p PostModel) Update(ctx context.Context, post *entitys.Post) error {
 	return nil
 }
 
+// Vote ...
 func (p PostModel) Vote(ctx context.Context, id int64, vote int64) (int64, error) {
 	return 0, nil
 }
 
+// Delete ...
 func (p PostModel) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
+// GetAll ...
 func (p PostModel) GetAll(ctx context.Context, filters entitys.Filters) ([]*entitys.Post, entitys.Metadata, error) {
 	_, err := p.getAllPromoted(ctx, filters)
 	if err != nil {

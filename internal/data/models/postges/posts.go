@@ -9,10 +9,12 @@ import (
 	"time"
 )
 
+// PostModel ...
 type PostModel struct {
 	DB *sql.DB
 }
 
+// Insert ...
 func (p PostModel) Insert(ctx context.Context, post *entitys.Post) error {
 	query := `
         INSERT INTO posts (title, author, link, subreddit_id, content, promoted, nsfw) 
@@ -27,6 +29,7 @@ func (p PostModel) Insert(ctx context.Context, post *entitys.Post) error {
 	return p.DB.QueryRowContext(ctx, query, args...).Scan(&post.ID, &post.CreatedAt, &post.Version)
 }
 
+// Get ...
 func (p PostModel) Get(ctx context.Context, id int64) (*entitys.Post, error) {
 	if id < 1 {
 		return nil, entitys.ErrRecordNotFound
@@ -87,6 +90,7 @@ func (p PostModel) Get(ctx context.Context, id int64) (*entitys.Post, error) {
 	return &post, nil
 }
 
+// Update ...
 func (p PostModel) Update(ctx context.Context, post *entitys.Post) error {
 	query := `
         UPDATE posts
@@ -123,6 +127,7 @@ func (p PostModel) Update(ctx context.Context, post *entitys.Post) error {
 	return nil
 }
 
+// Vote ...
 func (p PostModel) Vote(ctx context.Context, id int64, vote int64) (int64, error) {
 	if id < 1 {
 		return 0, entitys.ErrRecordNotFound
@@ -154,6 +159,7 @@ func (p PostModel) Vote(ctx context.Context, id int64, vote int64) (int64, error
 	return score, nil
 }
 
+// Delete ...
 func (p PostModel) Delete(ctx context.Context, id int64) error {
 	if id < 1 {
 		return entitys.ErrRecordNotFound

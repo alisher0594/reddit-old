@@ -74,6 +74,7 @@ type Metadata struct {
 	TotalRecords int `json:"total_records,omitempty"`
 }
 
+// CalculateMetadata ...
 func CalculateMetadata(totalRecords, page, pageSize int) Metadata {
 	if totalRecords == 0 {
 		// Note that we return an empty Metadata struct if there are no records.
