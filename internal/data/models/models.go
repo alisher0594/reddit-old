@@ -21,14 +21,14 @@ type Models struct {
 	Posts Posts
 }
 
-func New(db *sql.DB) Models {
-	return Models{
+func New(db *sql.DB) *Models {
+	return &Models{
 		Posts: postges.PostModel{DB: db},
 	}
 }
 
-func NewMock() Models {
-	return Models{
+func NewMock() *Models {
+	return &Models{
 		Posts: mock.PostModel{},
 	}
 }

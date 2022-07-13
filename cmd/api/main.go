@@ -32,7 +32,7 @@ type config struct {
 type application struct {
 	config config
 	logger *jsonlog.Logger
-	models models.Models
+	models *models.Models
 }
 
 func main() {
